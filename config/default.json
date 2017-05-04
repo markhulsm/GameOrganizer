@@ -1,9 +1,9 @@
 {
   "mongo" : {
-    "url"   : "mongodb://localhost:27017/exampleDb"
+    "url"   : ""
   },
   "slack"            : {
-    "token"            : "xoxb-178145250929-kJmxR6GIw62pprSWUddrK9NA",
+    "token"            : "",
     "disabledUsers"    : ["USLACKBOT"],
     "disabledChannels" : [],
     "channelId": "general"
