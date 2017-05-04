@@ -1,10 +1,10 @@
 {
   "mongo" : {
-    "url"   : "h"
+    "url"   : ENV['MONGODB_URI']
   },
   "slack"            : {
-    "token"            : "",
-    "disabledUsers"    : ["USLACKBOT"],
+    "token"            : ENV['SLACK_TOKEN'],
+    "disabledUsers"    : [],
     "disabledChannels" : [],
     "channelId": "general"
   },
