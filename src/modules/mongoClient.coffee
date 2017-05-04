@@ -11,7 +11,7 @@ class MongoClient
     if !url
 
 
-      console.log "!!!!!!!!!!", process, process.env
+      console.log "!!!!!!!!!!", process.env
       @url = process.env.MONGOLAB_URI || config.get 'mongo.url'
       return
     @url = url
