@@ -33,9 +33,11 @@ class InputHelper
       message: matches[2]
 
   @isCreateEvent: (input) ->
-    createEventPattern = /^[c|C][r|R][e|E][a|A][t|T][e|E] [e|E][v|V][e|E][n|N][t|T]$/
+    createEventPattern = /^create event.*/i
     if !input.match createEventPattern
+      console.log "not create"
       return false
+    console.log "create"
     return true
 
 module.exports = InputHelper

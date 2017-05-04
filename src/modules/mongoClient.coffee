@@ -6,6 +6,7 @@ class MongoClient
 
   @db         = null
   @collection = null
+  @events     = null
 
   constructor: (url) ->
     if !url
@@ -19,6 +20,7 @@ class MongoClient
       Mongo.connect @url, (err, db) =>
         if err is null
           @collection = db.collection 'users'
+          @collection = db.collection 'events'
           resolve db
         else
           db.close()
@@ -238,7 +240,6 @@ class MongoClient
   saveEvent: (event) ->
     promise = new Promise (resolve, reject) =>
       eventObj =
-        type      : "event"
         name      : event.name
         startDate : event.date
         recur     : event.recur
@@ -246,7 +247,7 @@ class MongoClient
       console.log "save event"
       console.log eventObj
 
-      @collection.insert eventObj, (err, result) ->
+      @events.insert eventObj, (err, result) ->
         if err is null
           resolve result
         else
@@ -254,7 +255,7 @@ class MongoClient
 
   getEvents: () ->
     promise = new Promise (resolve, reject) =>
-      @collection.find({ type: "event" }).toArray (err, docs) =>
+      @events.toArray (err, docs) =>
 
         if err isnt null
           reject()
@@ -286,14 +287,14 @@ class MongoClient
             status: feedback
             timestamp: Date.now()
 
-      @collection.update event, update, (err, result) =>
+      @events.update event, update, (err, result) =>
         if err isnt null
           return reject()
         resolve result
 
   getEventAttendanceCount: (eventName) ->
     promise = new Promise (resolve, reject) =>
-      @collection.find({ name: eventName, type: "event" }).toArray (err, docs) =>
+      @events.find({ name: eventName, type: "event" }).toArray (err, docs) =>
 
         if err isnt null
           return reject()

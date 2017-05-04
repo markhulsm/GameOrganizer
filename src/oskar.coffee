@@ -86,6 +86,9 @@ class Oskar
     if !@onboardingHelper.isOnboarded(message.user)
       return @onboardingHelper.advance(message.user, message.text)
 
+    if InputHelper.isCreateEvent(message.text)
+      return @createEvent message.text, message.user
+
     # if user is asking for feedback of user with ID
     if userId = InputHelper.isAskingForUserStatus(message.text)
       return @revealStatus userId, message
@@ -97,9 +100,6 @@ class Oskar
     # if user is asking for help, send a link to the FAQ
     if InputHelper.isAskingForHelp(message.text)
       return @composeMessage message.user, 'faq'
-
-    if InputHelper.isCreateEvent(message.text, message.user)
-      return @createEvent message.text
 
     # if feedback is long enough ago, evaluate
     @mongo.getLatestUserTimestampForProperty('feedback', message.user).then (timestamp) =>
@@ -115,6 +115,8 @@ class Oskar
       return @onboardingHelper.welcome(userId)
 
     @mongo.saveUserStatus userId, status
+
+    console.log userId + status
 
     # if user switched to anything but active or triggered, skip
     if status != 'active' && status != 'triggered'
@@ -325,7 +327,7 @@ class Oskar
         name : array[1]
         date : date
         recur : array[3]
-    saveEvent(event)
+    @mongo.saveEvent(event)
     @composeMessage user, 'eventCreated'
 
 module.exports = Oskar
