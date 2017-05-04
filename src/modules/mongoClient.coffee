@@ -20,7 +20,7 @@ class MongoClient
       Mongo.connect @url, (err, db) =>
         if err is null
           @collection = db.collection 'users'
-          @collection = db.collection 'events'
+          @events = db.collection 'events'
           resolve db
         else
           db.close()
@@ -273,18 +273,16 @@ class MongoClient
 
         resolve docs
 
-  saveEventAttendance: (userId, eventName, feedback) ->
+  saveEventAttendance: (userId, eventName) ->
     promise = new Promise (resolve, reject) =>
 
       event =
-        type: "event"
         name: eventName
 
       update =
         $push:
           feedback:
             user: userId
-            status: feedback
             timestamp: Date.now()
 
       @events.update event, update, (err, result) =>
@@ -294,7 +292,7 @@ class MongoClient
 
   getEventAttendanceCount: (eventName) ->
     promise = new Promise (resolve, reject) =>
-      @events.find({ name: eventName, type: "event" }).toArray (err, docs) =>
+      @events.find({ name: eventName }).toArray (err, docs) =>
 
         if err isnt null
           return reject()

@@ -9,6 +9,7 @@ TimeHelper       = require './helper/timeHelper'
 InputHelper      = require './helper/inputHelper'
 OnboardingHelper = require './helper/onboardingHelper'
 OskarTexts       = require './content/oskarTexts'
+config           = require 'config'
 
 class Oskar
 
@@ -83,8 +84,8 @@ class Oskar
     console.log message.text
 
     # if user is not onboarded, run until onboarded
-    if !@onboardingHelper.isOnboarded(message.user)
-      return @onboardingHelper.advance(message.user, message.text)
+    #if !@onboardingHelper.isOnboarded(message.user)
+      #return @onboardingHelper.advance(message.user, message.text)
 
     if InputHelper.isCreateEvent(message.text)
       return @createEvent message.text, message.user
@@ -294,7 +295,9 @@ class Oskar
       statusMsg = OskarTexts.faq
 
     else if messageType is 'eventCreated'
+      user = @slack.getUser userId
       statusMsg = OskarTexts.eventCreated
+      @slack.postMessageToChannel process.env.CHANNEL_ID || config.get('slack.channelId'), OskarTexts.eventCreatedChannel.format user.name, obj.name, obj.date
 
     # everything else, if array choose random string
     else
@@ -321,13 +324,13 @@ class Oskar
     dateArray = array[2].split(' ')
     dateParts = dateArray[0].split('/')
     timeParts = dateArray[1].split(':')
-    date = new Date(dateParts[2], dateParts[1]-1, dateParts[0], timeParts[1], timeParts[0])
+    date = new Date(dateParts[2], dateParts[1]-1, dateParts[0], timeParts[0], timeParts[1])
 
     event =
         name : array[1]
         date : date
         recur : array[3]
     @mongo.saveEvent(event)
-    @composeMessage user, 'eventCreated'
+    @composeMessage user, 'eventCreated', event
 
 module.exports = Oskar

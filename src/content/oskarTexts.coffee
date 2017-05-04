@@ -90,4 +90,6 @@ OskarTexts =
 
   eventCreated: "Thanks for creating that event, I will notify people about it"
 
+  eventCreatedChannel: "{0} created an event called \"{1}\" at {2}"
+
 module.exports = OskarTexts
