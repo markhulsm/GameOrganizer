@@ -1,17 +1,17 @@
 class InputHelper
 
   @isValidStatus: (status) ->
-    numberPattern = /^[1-5]$/
-    if !status.match numberPattern
+    yesNoPattern = /^[y|Y][e|E][s|S]|[n|N][o|O]$/
+    if !status.match yesNoPattern
       return false
     return true
 
   @isAskingForUserStatus: (input) ->
-    userPattern = /^How is <[@|\!](\w+)>\s?\??$/i
+    userPattern = /^Is <[@|\!](\w+)>\s? coming\??$/i
     response = input.match userPattern
     if response?
       return response[1]
-    userPattern = /^How is everyone\??$/i
+    userPattern = /^Who is coming\??$/i
     response = input.match userPattern
     if response?
       return 'channel'
