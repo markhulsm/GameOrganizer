@@ -118,7 +118,7 @@ class Oskar
     # if it's weekend or between 0-8 at night, skip
     user = @slack.getUser userId
     date = TimeHelper.getLocalDate(null, user.tz_offset / 3600)
-    if (TimeHelper.isWeekend() || TimeHelper.isDateInsideInterval 0, 8, date || TimeHelper.isDateInsideInterval 17, 24, date
+    if (TimeHelper.isWeekend() || TimeHelper.isDateInsideInterval 0, 8, date || TimeHelper.isDateInsideInterval 17, 24, date)
       return
 
     @mongo.getLatestUserTimestampForProperty('feedback', userId).then (timestamp) =>
