@@ -12,30 +12,20 @@ OskarTexts =
     '4': 'really good'
     '5': 'awesome'
 
-  introduction: "Hey {0}! Let me quickly introduce myself.\nMy name is Oskar, and the team has drafted me in to be their new happiness coach on Slack. I'm not going to bother you a lot, but every once in a while (usually twice a day), I'm gonna ask how you feel. Ready? *Just reply to this message and we'll give is a try* :smile:"
+  introduction: "Hey {0}! Let me quickly introduce myself.\nMy name is Oskar, and the team has drafted me in to help organize events in Slack.  Ready? *Just reply to this message and we'll uive is a try* :smile:"
 
-  firstMessage: "Alright! From now on, I'll check in once in a while to ask how you're feeling?'\n\nYou can reply to me with a number between 1 and 5, and I'll keep track of your answers over time and share them with your team.\n\nOK? Let's give it a try: *How do you feel right now?*\n
-          (5) :heart_eyes_cat: Awesome\n
-          (4) :smile: Really good\n
-          (3) :neutral_face: Alright\n
-          (2) :pensive: A bit down\n
-          (1) :tired_face: Pretty bad\n"
+  firstMessage: "Alright! Let me know when you are coming to my events in the future.'\n\nYou can reply to me with Yes or No I'll keep track of your answers so that other people know how many are coming.\n\nOK?"
 
-  firstMessageSuccess: "That was easy, wasn't it? :smile: I'm gonna disappear for a few hours now, but I'll check in on you in a couple of hours, or tomorrow, if I miss you." # todo: is now afternoon or next day"
+  firstMessageSuccess: "That was easy, wasn't it?"
 
-  firstMessageFailure: "Whoops, it looks like you're trying to tell me how you feel, but unfortunately I only understand numbers between 1 and 5. Can you give it another go?"
+  firstMessageFailure: "Whoops, it looks like you're trying to answer me, but unfortunately I only understand Yes and No. Can you give it another go?"
 
   requestFeedback:
     random: [
-      "Hey {0}, How are you feeling right now? Hit me with a number and I'll share it with the rest of our team.\n",
-      "Hello, me again! Just checking in to see how you're feeling. Want to share?\n",
-      "Nice to see you, {0}, Wanna tell me how you feel? A number between 1 and 5 is all I need.\n"
+      "Hey {0}, How are coming to the {1} event at {2}? Let me know and I'll share who is coming.\n",
+      "Hello, me again! Just checking in to see if you are coming to {1} at {2}?\n",
     ]
-    selection: "(5) :heart_eyes_cat: Awesome\n
-                (4) :smile: Really good\n
-                (3) :neutral_face: Alright\n
-                (2) :pensive: A bit down\n
-                (1) :tired_face: Pretty bad\n"
+    selection: ""
     options: [
       "Perhaps you missed my last message... I'd really love to hear how you're doing. Would you mind letting me know?"
       "Hey, looks like you missed me last time, but if you can give me a number between 1-5 to let me know how you feel, I'll be on my way :smile:"
@@ -62,9 +52,8 @@ OskarTexts =
   ]
 
   invalidInput: [
-    "Oh! I'm not sure what you meant, there: I only understand numbers between 1 and 5. Do you mind phrasing that a little differently?",
-    "Oh! I'm not sure what you meant, there: I only understand numbers between 1 and 5. Do you mind phrasing that a little differently?",
-    "I\'d really love to understand what you\'re saying, but until I become a little more educated, I'll need you to stick to using numbers between 1 and 5 to tell me how you feel."
+    "Oh! I'm not sure what you meant, there.  I only understand Yes and No. Do you mind phrasing that a little differently?",
+    "I\'d really love to understand what you\'re saying, but until I become a little more educated, I'll need you to stick to using Yes and No."
   ]
 
   lowFeedback: [
@@ -88,7 +77,7 @@ OskarTexts =
   # feedback already received
   feedbackReceived: [
     "Thanks a lot, buddy! Keep up the good work!",
-    "You\'re a champion. Thanks for the input and have a great day!",
+    "You\'re a champion. Thanks for the response and have a great day!",
     "That\'s really helpful. I wish you good luck with everything today!"
   ]
 
