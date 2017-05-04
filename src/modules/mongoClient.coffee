@@ -9,10 +9,7 @@ class MongoClient
 
   constructor: (url) ->
     if !url
-
-
-      console.log "!!!!!!!!!!", process.env
-      @url = process.env.MONGOLAB_URI || config.get 'mongo.url'
+      @url = process.env.MONGODB_URI || config.get 'mongo.url'
       return
     @url = url
 
