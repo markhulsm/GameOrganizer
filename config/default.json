@@ -1,6 +1,6 @@
 {
   "mongo" : {
-    "url"   : ""
+    "url"   : "h"
   },
   "slack"            : {
     "token"            : "",
