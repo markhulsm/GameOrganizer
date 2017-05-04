@@ -80,6 +80,8 @@ class Oskar
 
   messageHandler: (message) =>
 
+    console.log message.text
+
     # if user is not onboarded, run until onboarded
     if !@onboardingHelper.isOnboarded(message.user)
       return @onboardingHelper.advance(message.user, message.text)
