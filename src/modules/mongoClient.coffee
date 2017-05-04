@@ -8,16 +8,16 @@ class MongoClient
   @collection = null
 
   constructor: (url) ->
-    console.log url 
+    console.log "URL", url 
     if !url
       @url = process.env.MONGOLAB_URI || config.get 'mongo.url'
-      console.log @url 
+      console.log "@URL", @url 
       return
     @url = url
 
   connect: () ->
     promise = new Promise (resolve, reject) =>
-      console.log @url
+      console.log "!URL", @url
       Mongo.connect @url, (err, db) =>
         if err is null
           @collection = db.collection 'users'
