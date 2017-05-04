@@ -12,7 +12,7 @@ OskarTexts =
     '4': 'really good'
     '5': 'awesome'
 
-  introduction: "Hey {0}! Let me quickly introduce myself.\nMy name is Oskar, and the team has drafted me in to help organize events in Slack.  Ready? *Just reply to this message and we'll uive is a try* :smile:"
+  introduction: "Hey {0}! Let me quickly introduce myself.\nMy name is Oskar, and the team has drafted me in to help organize events in Slack.  Ready? *Just reply to this message and we'll give us a try* :smile:"
 
   firstMessage: "Alright! Let me know when you are coming to my events in the future.'\n\nYou can reply to me with Yes or No I'll keep track of your answers so that other people know how many are coming.\n\nOK?"
 
@@ -22,7 +22,7 @@ OskarTexts =
 
   requestFeedback:
     random: [
-      "Hey {0}, How are coming to the {1} event at {2}? Let me know and I'll share who is coming.\n",
+      "Hey {0}, Are you coming to the {1} event at {2}? Let me know and I'll share who is coming.\n",
       "Hello, me again! Just checking in to see if you are coming to {1} at {2}?\n",
     ]
     selection: ""
@@ -87,5 +87,7 @@ OskarTexts =
     "Thanks for being so open! Let's catch up in a few hours.",
     "Gotcha. I've pinged that message to the rest of the team."
   ]
+
+  eventCreated: "Thanks for creating that event, I will notify people about it"
 
 module.exports = OskarTexts

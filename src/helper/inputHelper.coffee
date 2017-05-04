@@ -32,4 +32,10 @@ class InputHelper
       status: matches[1]
       message: matches[2]
 
+  @isCreateEvent: (input) ->
+    createEventPattern = /^[c|C][r|R][e|E][a|A][t|T][e|E] [e|E][v|V][e|E][n|N][t|T]$/
+    if !status.match createEventPattern
+      return false
+    return true
+
 module.exports = InputHelper
