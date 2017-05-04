@@ -96,6 +96,9 @@ class Oskar
     if InputHelper.isAskingForHelp(message.text)
       return @composeMessage message.user, 'faq'
 
+    if InputHelper.isCreateEvent(message.text, message.user)
+      return @createEvent message.text
+
     # if feedback is long enough ago, evaluate
     @mongo.getLatestUserTimestampForProperty('feedback', message.user).then (timestamp) =>
       @evaluateFeedback message, timestamp
@@ -286,6 +289,9 @@ class Oskar
     else if messageType is 'faq'
       statusMsg = OskarTexts.faq
 
+    else if messageType is 'eventCreated'
+      statusMsg = OskarTexts.eventCreated
+
     # everything else, if array choose random string
     else
       if typeIsArray OskarTexts[messageType]
@@ -305,5 +311,19 @@ class Oskar
         userId: userId
         status: 'triggered'
       slack.emit 'presence', data
+
+  createEvent: (text, user) ->
+    array = text.split('\n')
+    dateArray = array[2].split(' ')
+    dateParts = dateArray[0].split('/')
+    timeParts = dateArray[1].split(':')
+    date = new Date(dateParts[2], dateParts[1]-1, dateParts[0], timeParts[1], timeParts[0])
+
+    event =
+        name : array[1]
+        date : date
+        recur : array[3]
+    saveEvent(event)
+    @composeMessage user, 'eventCreated'
 
 module.exports = Oskar

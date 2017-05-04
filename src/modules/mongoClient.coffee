@@ -241,7 +241,6 @@ class MongoClient
         name      : event.name
         startDate : event.date
         recur     : event.recur
-        recurNum  : event.num
 
       console.log "save event"
       console.log eventObj
