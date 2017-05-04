@@ -234,4 +234,83 @@ class MongoClient
           else
             reject()
 
+  saveEvent: (event) ->
+    promise = new Promise (resolve, reject) =>
+      eventObj =
+        type      : "event"
+        name      : event.name
+        startDate : event.date
+        recur     : event.recur
+        recurNum  : event.num
+
+      console.log "save event"
+      console.log eventObj
+
+      @collection.insert eventObj, (err, result) ->
+        if err is null
+          resolve result
+        else
+          reject()
+
+  getEvents: () ->
+    promise = new Promise (resolve, reject) =>
+      @collection.find({ type: "event" }).toArray (err, docs) =>
+
+        if err isnt null
+          reject()
+
+        filtered = []
+        day = date.getDate()
+        month = date.getMonth()
+        year = date.getYear()
+
+        if docs[0]
+          filtered = docs[0].filter (startDate) ->
+            date = new Date startDate
+            return (date.getDate() is day && date.getMonth() is month && date.getYear() is year)
+          return resolve filtered
+
+        resolve docs
+
+  saveEventAttendance: (userId, eventName, feedback) ->
+    promise = new Promise (resolve, reject) =>
+
+      event =
+        type: "event"
+        name: eventName
+
+      update =
+        $push:
+          feedback:
+            user: userId
+            status: feedback
+            timestamp: Date.now()
+
+      @collection.update event, update, (err, result) =>
+        if err isnt null
+          return reject()
+        resolve result
+
+  getEventAttendanceCount: (eventName) ->
+    promise = new Promise (resolve, reject) =>
+      @collection.find({ name: eventName, type: "event" }).toArray (err, docs) =>
+
+        if err isnt null
+          return reject()
+
+        if docs.length is 0
+          return resolve false
+
+        filtered = []
+        day = date.getDate()
+        month = date.getMonth()
+
+        if docs[0].feedback
+          filtered = docs[0].feedback.filter (feedback) ->
+            date = new Date feedback.timestamp
+            return (date.getDate() is day && date.getMonth() is month)
+          return resolve filtered.length
+
+        resolve(0)
+
 module.exports = MongoClient
