@@ -72,6 +72,7 @@ class Oskar
 
     # if a user exists, create, otherwise go ahead without
     @mongo.userExists(data.userId).then (res) =>
+      console.log res
       if !res
         @mongo.saveUser(user).then (res) =>
           @requestUserFeedback data.userId, data.status
@@ -115,6 +116,8 @@ class Oskar
       return @onboardingHelper.welcome(userId)
 
     @mongo.saveUserStatus userId, status
+
+
 
     # if user switched to anything but active or triggered, skip
     if status != 'active' && status != 'triggered'
