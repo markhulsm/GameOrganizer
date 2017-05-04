@@ -8,8 +8,6 @@ class MongoClient
   @collection = null
 
   constructor: (url) ->
-    console.log process.env, process
-
     if !url
       @url = process.env.MONGOLAB_URI || config.get 'mongo.url'
       return
@@ -17,6 +15,7 @@ class MongoClient
 
   connect: () ->
     promise = new Promise (resolve, reject) =>
+      console.log @url
       Mongo.connect @url, (err, db) =>
         if err is null
           @collection = db.collection 'users'
