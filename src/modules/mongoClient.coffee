@@ -8,8 +8,10 @@ class MongoClient
   @collection = null
 
   constructor: (url) ->
+    console.log url 
     if !url
       @url = process.env.MONGOLAB_URI || config.get 'mongo.url'
+      console.log @url 
       return
     @url = url
 
