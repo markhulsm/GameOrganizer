@@ -94,7 +94,7 @@ OskarTexts =
 
   eventAttendance: "{0} are coming to the event {1} at {2}"
 
-  upcomingEvent: "{0} is today at {1}"
+  upcomingEvent: "{0} is today at {1} respond 'Yes' or 'No' if you want to let me know if you are coming"
 
   noEvent: "Sorry I couldn't find an event for today"
 
