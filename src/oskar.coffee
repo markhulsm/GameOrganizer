@@ -102,6 +102,9 @@ class Oskar
     if InputHelper.isAskingForHelp(message.text)
       return @composeMessage message.user, 'faq'
 
+    if InputHelper.isAskingForAttendance(message.text)
+      return @getAttendance message.user
+
     # if feedback is long enough ago, evaluate
     @mongo.getLatestUserTimestampForProperty('feedback', message.user).then (timestamp) =>
       @evaluateFeedback message, timestamp
@@ -299,6 +302,14 @@ class Oskar
       statusMsg = OskarTexts.eventCreated
       @slack.postMessageToChannel process.env.CHANNEL_ID || config.get('slack.channelId'), OskarTexts.eventCreatedChannel.format user.name, obj.name, obj.date
 
+    else if messageType is 'eventAttendance'
+      statusMsg = OskarTexts.eventAttendance.format obj.attendance, obj.name
+      return @slack.postMessage userId, statusMsg
+
+    else if messageType is 'noEvent'
+      statusMsg = OskarTexts.noEvent
+      return @slack.postMessage userId, statusMsg
+
     # everything else, if array choose random string
     else
       if typeIsArray OskarTexts[messageType]
@@ -332,5 +343,14 @@ class Oskar
         recur : array[3]
     @mongo.saveEvent(event)
     @composeMessage user, 'eventCreated', event
+
+  getAttendance: (user) ->
+
+    events = @mongo.getEvents()
+    if(events.length is not 0)
+      attendance = @mongo.getEventAttendanceCount(events[0].name)
+      return @composeMessage user, 'eventAttendance', { attendance : attendance, name : events[0].name }
+
+    @composeMessage user, 'noEvent'
 
 module.exports = Oskar

@@ -17,6 +17,13 @@ class InputHelper
       return 'channel'
     return null
 
+  @isAskingForAttendance: (input) ->
+    userPattern = /^How many are coming\??$/i
+    response = input.match userPattern
+    if response?
+      return true
+    return false
+
   @isAskingForHelp: (input) ->
     messagePattern = /help/i
     if input.match messagePattern
@@ -35,9 +42,7 @@ class InputHelper
   @isCreateEvent: (input) ->
     createEventPattern = /^create event.*/i
     if !input.match createEventPattern
-      console.log "not create"
       return false
-    console.log "create"
     return true
 
 module.exports = InputHelper

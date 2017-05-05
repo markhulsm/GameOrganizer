@@ -254,20 +254,27 @@ class MongoClient
           reject()
 
   getEvents: () ->
+    console.log 'stupid'
     promise = new Promise (resolve, reject) =>
+      console.log 'events ', @events
       @events.toArray (err, docs) =>
+
+        console.log err, docs
 
         if err isnt null
           reject()
 
         filtered = []
-        day = date.getDate()
-        month = date.getMonth()
-        year = date.getYear()
+        today = new Date
+        day = today.getDate()
+        month = today.getMonth()
+        year = today.getYear()
+
+        console.log docs
 
         if docs[0]
-          filtered = docs[0].filter (startDate) ->
-            date = new Date startDate
+          filtered = docs.filter (doc) ->
+            date = new Date doc.startDate
             return (date.getDate() is day && date.getMonth() is month && date.getYear() is year)
           return resolve filtered
 
@@ -298,17 +305,10 @@ class MongoClient
           return reject()
 
         if docs.length is 0
-          return resolve false
-
-        filtered = []
-        day = date.getDate()
-        month = date.getMonth()
+          return resolve 0
 
         if docs[0].feedback
-          filtered = docs[0].feedback.filter (feedback) ->
-            date = new Date feedback.timestamp
-            return (date.getDate() is day && date.getMonth() is month)
-          return resolve filtered.length
+          return resolve docs[0].feedback.lenth
 
         resolve(0)
 
