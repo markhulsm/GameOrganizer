@@ -254,10 +254,8 @@ class MongoClient
           reject()
 
   getEvents: () ->
-    console.log 'stupid'
     promise = new Promise (resolve, reject) =>
-      console.log 'events ', @events
-      @events.toArray (err, docs) =>
+      @events.find().toArray (err, docs) =>
 
         console.log err, docs
 
@@ -275,6 +273,7 @@ class MongoClient
         if docs[0]
           filtered = docs.filter (doc) ->
             date = new Date doc.startDate
+            console.log date, day, month, year, (date.getDate() is day && date.getMonth() is month && date.getYear() is year)
             return (date.getDate() is day && date.getMonth() is month && date.getYear() is year)
           return resolve filtered
 

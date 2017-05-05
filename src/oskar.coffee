@@ -345,12 +345,15 @@ class Oskar
     @composeMessage user, 'eventCreated', event
 
   getAttendance: (user) ->
-
-    events = @mongo.getEvents()
-    if(events.length is not 0)
-      attendance = @mongo.getEventAttendanceCount(events[0].name)
-      return @composeMessage user, 'eventAttendance', { attendance : attendance, name : events[0].name }
-
-    @composeMessage user, 'noEvent'
+    events = []
+    @mongo.getEvents().then (events) =>
+      console.log events
+      console.log events.length
+      if(events.length > 0)
+        attendance = 0
+        @mongo.getEventAttendanceCount(events[0].name).then (attendance) =>
+          @composeMessage user, 'eventAttendance', { attendance : attendance, name : events[0].name }
+      else
+        @composeMessage user, 'noEvent'
 
 module.exports = Oskar
