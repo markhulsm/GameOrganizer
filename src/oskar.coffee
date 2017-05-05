@@ -40,8 +40,8 @@ class Oskar
 
     # check for user's status every hour
     setInterval =>
-      @checkForUserStatus (@slack)
-    , 3600 * 1000
+      @checkUpcomingEvents (@slack)
+    , 1000 * 5 #* 60
 
   setupEvents: () =>
     @slack.on 'presence', @presenceHandler
@@ -310,6 +310,10 @@ class Oskar
       statusMsg = OskarTexts.noEvent
       return @slack.postMessage userId, statusMsg
 
+    else if messageType is 'upcomingEvent'
+      statusMsg = OskarTexts.upcomingEvent.format obj.name, obj.startDate
+      return @slack.postMessage userId, statusMsg
+
     # everything else, if array choose random string
     else
       if typeIsArray OskarTexts[messageType]
@@ -322,13 +326,22 @@ class Oskar
       @slack.postMessage(userId, statusMsg)
 
   # interval to request feedback every hour
-  checkForUserStatus: (slack) =>
+  checkUpcomingEvents: (slack) ->
+    DAY = 24 * 60 * 60 * 1000;
+
+    @mongo.getNextEvents().then (events) =>
+      if events.length > 0
+        event_time = new Date(events[0].startDate).getTime()
+        now = new Date().getTime()
+ 
+        if (event_time - DAY) < now && events[0].notificationSent == undefined
+          @notifyUsersOfEvent(slack, events[0])
+        
+  notifyUsersOfEvent: (slack , event) ->
+    @mongo.updateEventNotification event.name
     userIds = slack.getUserIds()
-    userIds.forEach (userId) ->
-      data =
-        userId: userId
-        status: 'triggered'
-      slack.emit 'presence', data
+    userIds.forEach (userId) =>
+      @composeMessage userId, 'upcomingEvent', event  
 
   createEvent: (text, user) ->
     array = text.split('\n')
@@ -347,8 +360,6 @@ class Oskar
   getAttendance: (user) ->
     events = []
     @mongo.getEvents().then (events) =>
-      console.log events
-      console.log events.length
       if(events.length > 0)
         attendance = 0
         @mongo.getEventAttendanceCount(events[0].name).then (attendance) =>

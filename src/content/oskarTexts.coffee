@@ -94,6 +94,8 @@ OskarTexts =
 
   eventAttendance: "{0} people are coming to the event {1}"
 
+  upcomingEvent: "{0} is today at {1}"
+
   noEvent: "Sorry I couldn't find an event for today"
 
 module.exports = OskarTexts

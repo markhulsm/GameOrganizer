@@ -256,9 +256,6 @@ class MongoClient
   getEvents: () ->
     promise = new Promise (resolve, reject) =>
       @events.find().toArray (err, docs) =>
-
-        console.log err, docs
-
         if err isnt null
           reject()
 
@@ -268,7 +265,26 @@ class MongoClient
         month = today.getMonth()
         year = today.getYear()
 
-        console.log docs
+        if docs[0]
+          filtered = docs.filter (doc) ->
+            date = new Date doc.startDate
+            console.log date, day, month, year, (date.getDate() is day && date.getMonth() is month && date.getYear() is year)
+            return (date.getDate() is day && date.getMonth() is month && date.getYear() is year)
+          return resolve filtered
+
+        resolve docs
+
+  getNextEvents: () ->
+    promise = new Promise (resolve, reject) =>
+      @events.find({ startDate: { $gte: new Date() } }).sort({startDate: 1}).toArray (err, docs) =>
+        if err isnt null
+          reject()
+
+        filtered = []
+        today = new Date
+        day = today.getDate()
+        month = today.getMonth()
+        year = today.getYear()
 
         if docs[0]
           filtered = docs.filter (doc) ->
@@ -278,6 +294,22 @@ class MongoClient
           return resolve filtered
 
         resolve docs
+
+  updateEventNotification: (eventName) ->
+    promise = new Promise (resolve, reject) =>
+
+      event =
+        name: eventName
+
+      update =
+        $push:
+          notificationSent: true
+
+      @events.update event, update, (err, result) =>
+        if err isnt null
+          return reject()
+        resolve result
+
 
   saveEventAttendance: (userId, eventName) ->
     promise = new Promise (resolve, reject) =>
