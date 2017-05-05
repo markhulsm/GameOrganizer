@@ -90,13 +90,19 @@ class Oskar
     if InputHelper.isCreateEvent(message.text)
       return @createEvent message.text, message.user
 
+    if InputHelper.isYesStatus(message.text)
+      return @attendEvent true, message.user
+
+    if InputHelper.isNoStatus(message.text)
+      return @attendEvent false, message.user
+
     # if user is asking for feedback of user with ID
     if userId = InputHelper.isAskingForUserStatus(message.text)
       return @revealStatus userId, message
 
     # if comment is allowed, save in DB
-    if @slack.isUserFeedbackMessageAllowed message.user
-      return @handleFeedbackMessage message
+    #if @slack.isUserFeedbackMessageAllowed message.user
+      #return @handleFeedbackMessage message
 
     # if user is asking for help, send a link to the FAQ
     if InputHelper.isAskingForHelp(message.text)
@@ -106,8 +112,8 @@ class Oskar
       return @getAttendance message.user
 
     # if feedback is long enough ago, evaluate
-    @mongo.getLatestUserTimestampForProperty('feedback', message.user).then (timestamp) =>
-      @evaluateFeedback message, timestamp
+    #@mongo.getLatestUserTimestampForProperty('feedback', message.user).then (timestamp) =>
+      #@evaluateFeedback message, timestamp
 
   # is called from onboarding helper to compose messages
   onboardingHandler: (message) =>
@@ -303,7 +309,17 @@ class Oskar
       @slack.postMessageToChannel process.env.CHANNEL_ID || config.get('slack.channelId'), OskarTexts.eventCreatedChannel.format user.name, obj.name, obj.date
 
     else if messageType is 'eventAttendance'
-      statusMsg = OskarTexts.eventAttendance.format obj.attendance, obj.name
+      yeses = obj.attendance.filter (att) ->
+        return att.response
+      statusMsg = OskarTexts.eventAttendance.format yeses.length, obj.name, obj.startDate
+      return @slack.postMessage userId, statusMsg
+
+    else if messageType is 'eventAttended'
+      statusMsg = OskarTexts.eventAttended.format obj.name, obj.startDate
+      return @slack.postMessage userId, statusMsg
+
+    else if messageType is 'eventNotAttended'
+      statusMsg = OskarTexts.eventNotAttended.format obj.name
       return @slack.postMessage userId, statusMsg
 
     else if messageType is 'noEvent'
@@ -347,12 +363,20 @@ class Oskar
   getAttendance: (user) ->
     events = []
     @mongo.getEvents().then (events) =>
-      console.log events
-      console.log events.length
       if(events.length > 0)
-        attendance = 0
-        @mongo.getEventAttendanceCount(events[0].name).then (attendance) =>
-          @composeMessage user, 'eventAttendance', { attendance : attendance, name : events[0].name }
+        @composeMessage user, 'eventAttendance', events[0]
+      else
+        @composeMessage user, 'noEvent'
+
+  attendEvent: (attend, user) ->
+    events = []
+    @mongo.getEvents().then (events) =>
+      if(events.length > 0)
+        @mongo.saveEventAttendance(user, events[0], attend).then () =>
+          if(attend)
+            @composeMessage user, 'eventAttended', events[0]
+          else
+            @composeMessage user, 'eventNotAttended', events[0]
       else
         @composeMessage user, 'noEvent'
 

@@ -279,22 +279,26 @@ class MongoClient
 
         resolve docs
 
-  saveEventAttendance: (userId, eventName) ->
+  saveEventAttendance: (userId, event, response) ->
     promise = new Promise (resolve, reject) =>
+      if !event.attendance
+        event.attendance = []
 
-      event =
-        name: eventName
+      found = false
+      event.attendance.forEach (att) ->
+        if(att.userId = userId)
+          att.response = response
+          found = true
 
-      update =
-        $push:
-          feedback:
-            user: userId
-            timestamp: Date.now()
+      if !found
+        event.attendance.push {userId : userId, response : response}
 
-      @events.update event, update, (err, result) =>
-        if err isnt null
-          return reject()
-        resolve result
+      @events.save event, (err, result) ->
+        if err is null
+          resolve result
+        else
+          reject()
+
 
   getEventAttendanceCount: (eventName) ->
     promise = new Promise (resolve, reject) =>

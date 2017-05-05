@@ -92,8 +92,12 @@ OskarTexts =
 
   eventCreatedChannel: "{0} created an event called \"{1}\" at {2}"
 
-  eventAttendance: "{0} people are coming to the event {1}"
+  eventAttendance: "{0} are coming to the event {1} at {2}"
 
   noEvent: "Sorry I couldn't find an event for today"
+
+  eventAttended: "Thanks for coming to the event {0} at {1}"
+
+  eventNotAttended: "Sorry to hear you can't come to {0}, but thanks for letting me know"
 
 module.exports = OskarTexts

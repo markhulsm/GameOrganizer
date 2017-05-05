@@ -1,8 +1,14 @@
 class InputHelper
 
-  @isValidStatus: (status) ->
-    yesNoPattern = /^[y|Y][e|E][s|S]|[n|N][o|O]$/
-    if !status.match yesNoPattern
+  @isYesStatus: (status) ->
+    pattern = /^[y|Y][e|E][s|S]$/
+    if !status.match pattern
+      return false
+    return true
+
+  @isNoStatus: (status) ->
+    pattern = /^[n|N][o|O]$/
+    if !status.match pattern
       return false
     return true
 
